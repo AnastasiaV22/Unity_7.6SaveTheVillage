@@ -5,9 +5,10 @@ public class Timer : MonoBehaviour
 {
     // Класс таймера
 
-    internal bool timerIsOn { get; private set; } = false;
-    private float currentTime = 0f;
-    private float defaultTime = 60f;
+    internal bool timerIsOn { get; private set; } = false; // Идет ли отсчет таймера (для паузы)
+    internal bool timerEnded { get; private set; } = false; // Завершил ли отсчет, если true, то нужно выполнить действия  
+    private float currentTime = 0f; // оставшееся время в секундах
+    internal float defaultTime { get; private set; } = 60f ; // Начальное время в секундах
 
     public Timer(float _newDefaultTime)
     {
@@ -21,6 +22,7 @@ public class Timer : MonoBehaviour
             currentTime -= Time.deltaTime;
             if (currentTime <= 0f)
             {
+                timerEnded = true;
                 TimerOff();
             }
 
@@ -37,6 +39,7 @@ public class Timer : MonoBehaviour
 
     public void StartTimer()
     {
+        timerEnded = false;
         currentTime = defaultTime;
         timerIsOn = true;
     }

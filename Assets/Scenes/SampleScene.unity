@@ -2550,7 +2550,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 710660854}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1982744920}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: CreateNewWarrior
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &710660854
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2923,6 +2935,18 @@ MonoBehaviour:
       - m_Target: {fileID: 1982744919}
         m_TargetAssemblyTypeName: UIMoving, Assembly-CSharp
         m_MethodName: OnNewGameStartButtonClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1982744920}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: NewGameStart
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3471,7 +3495,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &934599975
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4763,6 +4787,18 @@ MonoBehaviour:
       - m_Target: {fileID: 1982744919}
         m_TargetAssemblyTypeName: UIMoving, Assembly-CSharp
         m_MethodName: OnNewGameStartButtonClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1982744920}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: NewGameStart
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -9303,6 +9339,7 @@ GameObject:
   - component: {fileID: 1844893287}
   - component: {fileID: 1844893286}
   - component: {fileID: 1844893285}
+  - component: {fileID: 1844893289}
   m_Layer: 5
   m_Name: MainCanvas
   m_TagString: Untagged
@@ -9396,6 +9433,18 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &1844893289
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1844893284}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a87434bc637d8e4590b04248b8e5ed7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1846309840
 GameObject:
   m_ObjectHideFlags: 0
@@ -9717,6 +9766,8 @@ GameObject:
   - component: {fileID: 1982744918}
   - component: {fileID: 1982744917}
   - component: {fileID: 1982744916}
+  - component: {fileID: 1982744920}
+  - component: {fileID: 1982744921}
   - component: {fileID: 1982744919}
   m_Layer: 0
   m_Name: EventSystem
@@ -9794,6 +9845,39 @@ MonoBehaviour:
   aboutPanel: {fileID: 1626856232}
   settingsPanel: {fileID: 350992169}
   pausePanel: {fileID: 1083584148}
+--- !u!114 &1982744920
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1982744915}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a87434bc637d8e4590b04248b8e5ed7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1982744921
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1982744915}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c34b2a3fad553f54e9887050479bddaa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  foodCounter: {fileID: 1145929980}
+  citizenCounter: {fileID: 1086466063}
+  warriorsCounter: {fileID: 348334396}
+  raidersCounter: {fileID: 894429167}
+  newFoodTimer: {fileID: 1536423162}
+  feedingTimer: {fileID: 1692516891}
+  raidTimer: {fileID: 1972665880}
+  newCitizenTimer: {fileID: 1650065593}
+  newWarriorTimer: {fileID: 1827062814}
 --- !u!1 &1993475827
 GameObject:
   m_ObjectHideFlags: 0
@@ -10042,7 +10126,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2028531064
 RectTransform:
   m_ObjectHideFlags: 0
@@ -10498,7 +10582,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2089288902}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1982744920}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: NewGameStart
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &2089288902
 MonoBehaviour:
   m_ObjectHideFlags: 0

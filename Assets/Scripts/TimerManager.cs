@@ -1,65 +1,76 @@
 ﻿using UnityEngine;
 
 
-public class TimerManager : MonoBehaviour
+public class TimerManager: MonoBehaviour
 {
     // Класс управляющий таймерами (запуск, проверка окончания работы и тд)
 
-    public float gameTime { get; private set; } = 0f;
+    public float gameTime { get; private set; } = 0f; // Общее время прошедшее от начала игры
     public bool gameIsOn { get; private set; } = false;
 
     private float SecondsInDay = 100f; 
 
-    private Timer foodTimer;
-    private Timer raidTimer;
-    private Timer newWarriorTimer;
-    private Timer newCitizenTimer;
+    internal Timer foodTimer;
+    internal Timer raidTimer;
+    internal Timer feedingTimer;
+    internal Timer newWarriorTimer;
+    internal Timer newCitizenTimer;
 
-    private float defaultFoodTimer = 60f;
-    private float defaultRaidTimer = 120f;
-    private float defaultNewWarriorTimer = 60f;
-    private float defaultNewCitizenTimer = 60f;
+    private TimerManager() {}
+    private static TimerManager GameTimers;
 
-    void Start()
+    public static TimerManager GetTimers()
     {
-
+        if (GameTimers == null)
+            GameTimers = new TimerManager();
+        return GameTimers;
     }
+
 
     void Update()
     {
         if (gameIsOn)
         {
+            Debug.Log(gameTime);
+
             gameTime += Time.deltaTime;
 
-            if (!raidTimer.timerIsOn && currentDay() > 2)
+
+            if (foodTimer.timerEnded && !foodTimer.timerIsOn)
             {
-             //   GameActions.NewRaidCreate();
+                foodTimer.StartTimer();
+            }
+
+            if (feedingTimer.timerEnded && !feedingTimer.timerIsOn)
+            {
+                feedingTimer.StartTimer();
+            }
+
+            // Первый рейд случается через 3 дня 
+            if (!raidTimer.timerIsOn && currentDay() > 3 )
+            {
                 NextRaid();
             }
 
-            if (!foodTimer.timerIsOn)
-            {
-            //    GameActions.
-            }
-
-
         }
-
 
     }
 
-    public void NewGameStart()
+    public void NewGameStart(float _defaultFoodTimer, float _defaultFeedingTimer, float _defaultRaidTimer, float _defaultNewCitizenTimer, float _defaultNewWarriorTimer)
     {
         gameTime = 0f;
         gameIsOn = true;
 
-        foodTimer = new Timer(defaultFoodTimer);
+        foodTimer = new Timer(_defaultFoodTimer);
         foodTimer.StartTimer();
 
-        raidTimer = new Timer(defaultRaidTimer);
+        feedingTimer = new Timer(_defaultFeedingTimer);
+        feedingTimer.StartTimer();
 
-        newCitizenTimer = new Timer(defaultNewCitizenTimer);
-        newWarriorTimer = new Timer(defaultNewWarriorTimer);
+        raidTimer = new Timer(_defaultRaidTimer); 
+
+        newCitizenTimer = new Timer(_defaultNewCitizenTimer);
+        newWarriorTimer = new Timer(_defaultNewWarriorTimer);
     }
 
     public void GameEnd()
@@ -67,34 +78,52 @@ public class TimerManager : MonoBehaviour
         gameIsOn = false;
 
         // удалить обьекты таймеров
+
+
     }
 
-    public void CreateNewCitizen()
+    // возвращает true если началось создание нового жителя
+    public bool CreateNewCitizen()
     {
-        if (newCitizenTimer.timerIsOn)
+        if (!newCitizenTimer.timerIsOn)
+        {
             newCitizenTimer.StartTimer();
+            return true;
+        }
+
+        return false;
     }
 
-    public void CreateNewWarrior()
+    // возвращает true если началось создание нового война
+    public bool CreateNewWarrior()
     {
-        if (newWarriorTimer.timerIsOn)
+        if (!newWarriorTimer.timerIsOn) { 
             newWarriorTimer.StartTimer();
+            return true;
+        }
+
+        return false;
     }
 
     public void NextRaid()
     {
-        raidTimer.SetDefaultTime(defaultRaidTimer * Random.Range(1,5)/currentDay());
-        raidTimer.StartTimer(); 
+        if (!raidTimer.timerIsOn)
+        {
+            raidTimer.SetDefaultTime(raidTimer.defaultTime * Random.Range(2,5)/currentDay()); //Следующий рейд  
+            raidTimer.StartTimer();
+        }
     }
     
     public int currentDay()
     {
         return (int)(gameTime/SecondsInDay);
     }
+
     public void PauseGame()
     {
         gameIsOn = false;
         foodTimer.TimerOff();
+        feedingTimer.TimerOff();
         raidTimer.TimerOff();
 
 
@@ -105,11 +134,11 @@ public class TimerManager : MonoBehaviour
     }
 
 
-
     public void ContinueGame()
     {
         gameIsOn = true;
         foodTimer.TimerOn();
+        feedingTimer.TimerOn();
         raidTimer.TimerOn();
 
         // Если таймер не работал до остановки,то оставшееся время в процентах -1
