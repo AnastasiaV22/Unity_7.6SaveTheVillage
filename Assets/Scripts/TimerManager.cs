@@ -1,14 +1,14 @@
 ﻿using UnityEngine;
 
 
-public class TimerManager: MonoBehaviour
+public class TimerManager
 {
     // Класс управляющий таймерами (запуск, проверка окончания работы и тд)
 
     public float gameTime { get; private set; } = 0f; // Общее время прошедшее от начала игры
     public bool gameIsOn { get; private set; } = false;
 
-    private float SecondsInDay = 100f; 
+    private float SecondsInDay = 20f; 
 
     internal Timer foodTimer;
     internal Timer raidTimer;
@@ -27,33 +27,64 @@ public class TimerManager: MonoBehaviour
     }
 
 
-    void Update()
+    public void CheckRestartTimers()
     {
+
         if (gameIsOn)
         {
-            Debug.Log(gameTime);
-
-            gameTime += Time.deltaTime;
-
 
             if (foodTimer.timerEnded && !foodTimer.timerIsOn)
             {
+                Debug.Log("FoodTimerRestart");
                 foodTimer.StartTimer();
             }
 
             if (feedingTimer.timerEnded && !feedingTimer.timerIsOn)
             {
+                Debug.Log("FeedingTimerRestart");
                 feedingTimer.StartTimer();
             }
 
-            // Первый рейд случается через 3 дня 
-            if (!raidTimer.timerIsOn && currentDay() > 3 )
+            // Первый рейд через 3 дня 
+            if (!raidTimer.timerIsOn)
             {
-                NextRaid();
+                if (currentDay() > 3)
+                {
+                    Debug.Log("NextRaidRestart");
+                    NextRaid();
+                }
+                else
+                {
+                    raidTimer.StartTimer();
+                }
+            }
+
+            if (newCitizenTimer.timerEnded)
+            {
+                newCitizenTimer.StartTimer();
+                newCitizenTimer.TimerOff();
+            }
+            if (newWarriorTimer.timerEnded)
+            {
+                newWarriorTimer.StartTimer();
+                newWarriorTimer.TimerOff();
             }
 
         }
+    }
 
+    public void UpdateGameTimer(float deltaTime)
+    {
+        gameTime += deltaTime;
+       // Debug.Log("Current gametime = " +  gameTime);
+    }
+
+    public Timer CreateTimer(float defaultTime)
+    {
+        GameObject gameObject = new GameObject("TimerObject");
+        Timer timer = gameObject.AddComponent<Timer>();
+        timer.SetDefaultTime(defaultTime);
+        return timer;
     }
 
     public void NewGameStart(float _defaultFoodTimer, float _defaultFeedingTimer, float _defaultRaidTimer, float _defaultNewCitizenTimer, float _defaultNewWarriorTimer)
@@ -61,16 +92,21 @@ public class TimerManager: MonoBehaviour
         gameTime = 0f;
         gameIsOn = true;
 
-        foodTimer = new Timer(_defaultFoodTimer);
+        
+        foodTimer = CreateTimer(_defaultFoodTimer);
         foodTimer.StartTimer();
+        
 
-        feedingTimer = new Timer(_defaultFeedingTimer);
+        feedingTimer = CreateTimer(_defaultFeedingTimer);
         feedingTimer.StartTimer();
 
-        raidTimer = new Timer(_defaultRaidTimer); 
+       
+        raidTimer = CreateTimer(_defaultRaidTimer);
+        raidTimer.StartTimer();
 
-        newCitizenTimer = new Timer(_defaultNewCitizenTimer);
-        newWarriorTimer = new Timer(_defaultNewWarriorTimer);
+
+        newCitizenTimer = CreateTimer(_defaultNewCitizenTimer);
+        newWarriorTimer = CreateTimer(_defaultNewWarriorTimer);
     }
 
     public void GameEnd()

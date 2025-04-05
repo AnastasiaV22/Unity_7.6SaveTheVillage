@@ -19,6 +19,7 @@ public class Timer : MonoBehaviour
     {
         if (timerIsOn)
         {
+            //Debug.Log(timerIsOn.ToString() +' ' + currentTime + ' '+defaultTime);
             currentTime -= Time.deltaTime;
             if (currentTime <= 0f)
             {

@@ -18,22 +18,31 @@ public class UIDisplay : MonoBehaviour
     [SerializeField] Image newCitizenTimer;
     [SerializeField] Image newWarriorTimer;
 
+    [SerializeField] GameObject citizenCreationPanel;
+    [SerializeField] GameObject warriorCreationPanel;
+    [SerializeField] Button newCitizenCreationButton;
+    [SerializeField] Button newWarriorCreationButton;
+
+
     private UIDisplay() { }
     private static UIDisplay instance;
 
     public static UIDisplay GetInstance()
     {
-        if (instance == null)
-        {
-            instance = new UIDisplay();
-        }
         return instance;
     }
 
-    void Start()
+    private void Awake()
     {
         if (instance == null)
-            instance = new UIDisplay();
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
 
@@ -55,6 +64,15 @@ public class UIDisplay : MonoBehaviour
         NewWarriorTimerUpdate(100);
     }
 
+    internal void AllTimersUpdate(int newFoodTime, int feedingTime, int raidTime, int newCitizenTime, int newWarriorTime)
+    {
+        NewFoodTimerUpdate(newFoodTime);
+        FeedingTimerUpdate(feedingTime);
+        RaidTimerUpdate(raidTime);
+        NewCitizenTimerUpdate(newCitizenTime);
+        NewWarriorTimerUpdate(newWarriorTime);
+    }
+
     //Отображение текущего количества
     internal void FoodUpdate(int newAmount) { foodCounter.text = newAmount.ToString();}
     internal void CitizensUpdate(int newAmount) { citizenCounter.text = newAmount.ToString();}
@@ -63,11 +81,50 @@ public class UIDisplay : MonoBehaviour
 
 
     // Отображение время в процентах
-    internal void RaidTimerUpdate(int time) { raidTimer.fillAmount = time / 100;}
-    internal void NewFoodTimerUpdate(int time) { newFoodTimer.fillAmount = time / 100;} 
-    internal void FeedingTimerUpdate(int time) { feedingTimer.fillAmount = time / 100;}
+    internal void NewFoodTimerUpdate(int time) { newFoodTimer.fillAmount = time / 100f;} 
+    internal void RaidTimerUpdate(int time) { raidTimer.fillAmount = time / 100f;}
+    internal void FeedingTimerUpdate(int time) { feedingTimer.fillAmount = time / 100f;}
     
-    internal void NewCitizenTimerUpdate(int time) { newCitizenTimer.fillAmount = time / 100;}
-    internal void NewWarriorTimerUpdate(int time) { newWarriorTimer.fillAmount = time / 100;}
+    internal void NewCitizenTimerUpdate(int time) { newCitizenTimer.fillAmount = time / 100f;}
+    internal void NewWarriorTimerUpdate(int time) { newWarriorTimer.fillAmount = time / 100f;}
+
+
+    internal void ChangeCitizenCreationInterface()
+    {
+        if (citizenCreationPanel.activeSelf)
+        {
+            NewCitizenTimerUpdate(100);
+            citizenCreationPanel.SetActive(false);
+            newCitizenCreationButton.gameObject.SetActive(true);
+            Debug.Log("Status Citizen Creation Changed (Start)");
+        }
+        else
+        {
+            citizenCreationPanel.SetActive(true);
+            newCitizenCreationButton.gameObject.SetActive(false);
+            Debug.Log("Status Citizen Creation Changed (End)");
+        }
+    }
+
+    internal void ChangeWarriorCreationInterface()
+    {
+        if (warriorCreationPanel.activeSelf)
+        {
+            NewWarriorTimerUpdate(100);
+            warriorCreationPanel.SetActive(false);
+            newWarriorCreationButton.gameObject.SetActive(true);
+        }
+        else
+        {
+            warriorCreationPanel.SetActive(true);
+            newWarriorCreationButton.gameObject.SetActive(false);
+        }
+            Debug.Log("Status Warrior Creation Changed");
+    }
+
+    internal void SendWarningMessage(string message)
+    {
+        
+    }
 
 }

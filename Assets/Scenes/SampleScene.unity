@@ -1134,7 +1134,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 2
+  m_Text: 111
 --- !u!222 &348334397
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3841,7 +3841,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u0421\u0431\u043E\u0440 \u0443\u0440\u043E\u0436\u0430\u044F:"
+  m_Text: "\u0421\u043D\u0430\u0431\u0436\u0435\u043D\u0438\u0435 \u0430\u0440\u043C\u0438\u0438:"
 --- !u!222 &1034979954
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -4234,7 +4234,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 5
+  m_Text: 46
 --- !u!222 &1086466064
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -6883,13 +6883,13 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_Sprite: {fileID: 21300000, guid: 5b143470fbeae4f46ac9339ca8fef3a0, type: 3}
-  m_Type: 0
+  m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
+  m_FillClockwise: 0
+  m_FillOrigin: 2
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
 --- !u!222 &1536423163
@@ -8175,7 +8175,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u0421\u043D\u0430\u0431\u0436\u0435\u043D\u0438\u0435 \u0430\u0440\u043C\u0438\u0438:"
+  m_Text: "\u0421\u0431\u043E\u0440 \u0443\u0440\u043E\u0436\u0430\u044F:"
 --- !u!222 &1657404954
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -9019,7 +9019,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1789686120}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1982744920}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: CreateNewCitizen
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1789686120
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9878,6 +9890,9 @@ MonoBehaviour:
   raidTimer: {fileID: 1972665880}
   newCitizenTimer: {fileID: 1650065593}
   newWarriorTimer: {fileID: 1827062814}
+  citizenCreationPanel: {fileID: 1993475827}
+  newCitizenCreationButton: {fileID: 1789686119}
+  newWarriorCreationButton: {fileID: 710660853}
 --- !u!1 &1993475827
 GameObject:
   m_ObjectHideFlags: 0

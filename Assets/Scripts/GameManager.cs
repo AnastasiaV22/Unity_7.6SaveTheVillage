@@ -38,11 +38,11 @@ public class GameManager : MonoBehaviour
     private int defaultFeedingOfWarrior { get; } = 1;
 
     // Начальные значения таймеров
-    private int defaultFoodTimer { get; } = 60;
-    private int defaultFeedingTimer { get; } = 60;
-    private int defaultNewWarriorTimer { get; } = 60;
-    private int defaultNewCitizenTimer { get; } = 60;
-    private int defaultRaidTimer { get; } = 120;
+    private int defaultFoodTimer { get; } = 15;
+    private int defaultFeedingTimer { get; } = 30;
+    private int defaultNewWarriorTimer { get; } = 15;
+    private int defaultNewCitizenTimer { get; } = 30;
+    private int defaultRaidTimer { get; } = 60;
 
     private void Start()
     {
@@ -57,37 +57,54 @@ public class GameManager : MonoBehaviour
     {
         if (_timerManager.gameIsOn)
         {
+
             // По окончанию таймера добавление еды
             if (_timerManager.foodTimer.timerEnded)
             {
+                Debug.Log("food amount = " + currentAmountOfFood + "(+" + (currentAmountOfCitizens * defaultFoodForCitizen) + ")");
                 ChangeAmountOfFood(currentAmountOfCitizens * defaultFoodForCitizen);
             }
 
             // По окончанию таймера кормление армии
             if (_timerManager.feedingTimer.timerEnded)
             {
-                ChangeAmountOfFood(currentAmountOfWarriors * defaultFeedingOfWarrior);
+                Debug.Log("After feeding food amount = " + currentAmountOfFood + "(-" + (currentAmountOfWarriors * defaultFeedingOfWarrior) + ")");
+                ChangeAmountOfFood(-currentAmountOfWarriors * defaultFeedingOfWarrior);
             }
 
             // По окончанию таймера рейд и характеристики нового рейда
             if (_timerManager.raidTimer.timerEnded)
             {
-                currentAmountOfWarriors -= currentAmountOfRaiders;
+                Debug.Log("Raid № "+ currentRaid + " After raid warriors amount = " + currentAmountOfWarriors + "(-" + currentAmountOfRaiders + ")");
+                ChangeAmountOfWarriors(-currentAmountOfRaiders);
                 currentRaid++;
                 ChangeAmountOfRaiders(Mathf.RoundToInt(Mathf.Sqrt(_timerManager.currentDay() * currentRaid)));
+
             }
 
             // По окончанию таймера создание новых жителей
             if (_timerManager.newCitizenTimer.timerEnded)
             {
                 ChangeAmountOfCitizen(defaultAmountNewCitizens);
+                UIDisplay.GetInstance().ChangeCitizenCreationInterface();
+                UIDisplay.GetInstance().CitizensUpdate(currentAmountOfCitizens);
+                Debug.Log("New Amount of Cittizen = " + currentAmountOfCitizens + " (+" + defaultAmountNewCitizens + ")"); 
+                
             }
 
             // По окончанию таймера создание новых войнов
-            if (_timerManager.newCitizenTimer.timerEnded)
+            if (_timerManager.newWarriorTimer.timerEnded)
             {
                 ChangeAmountOfWarriors(defaultAmountNewWarriors);
+                UIDisplay.GetInstance().ChangeWarriorCreationInterface();
+                UIDisplay.GetInstance().WarriorsUpdate(currentAmountOfWarriors);
+                Debug.Log("New Amount of Warriors = " + currentAmountOfWarriors + " (+" + defaultAmountNewWarriors + ")");
             }
+            _timerManager.CheckRestartTimers();
+
+
+            _UIDisplay.AllTimersUpdate(_timerManager.foodTimer.CurrentTimeProcent(), _timerManager.feedingTimer.CurrentTimeProcent(), _timerManager.raidTimer.CurrentTimeProcent(), _timerManager.newCitizenTimer.CurrentTimeProcent(), _timerManager.newWarriorTimer.CurrentTimeProcent());
+            _timerManager.UpdateGameTimer(Time.deltaTime);
         }
     }
 
@@ -104,7 +121,7 @@ public class GameManager : MonoBehaviour
 
 
         //Отображение всех счетчиков и таймеров в интерфейсе
-        _UIDisplay.AllCountersUpdate(currentAmountOfFood, currentAmountOfWarriors, currentAmountOfCitizens, currentAmountOfRaiders);
+        _UIDisplay.AllCountersUpdate(currentAmountOfFood, currentAmountOfCitizens, currentAmountOfWarriors, currentAmountOfRaiders);
         _UIDisplay.AllTimersToFullUpdate();
     }
 
@@ -144,15 +161,30 @@ public class GameManager : MonoBehaviour
         if (currentAmountOfFood >= defaultCitizenCost)
         {
             if (_timerManager.CreateNewCitizen())
-                currentAmountOfFood -= defaultCitizenCost;
+            {
+                ChangeAmountOfFood(-defaultCitizenCost);
+                UIDisplay.GetInstance().ChangeCitizenCreationInterface();
+            }
         }
+        else
+        {
+            UIDisplay.GetInstance().SendWarningMessage("Не достаточно еды");
+        }
+
     }
+
     public void CreateNewWarrior()
     {
         if (currentAmountOfFood >= defaultWarriorCost)
         {
-            if (_timerManager.CreateNewWarrior())
-                currentAmountOfFood -= defaultWarriorCost;
+            if (_timerManager.CreateNewWarrior()) { 
+                ChangeAmountOfFood(-defaultWarriorCost);
+                UIDisplay.GetInstance().ChangeWarriorCreationInterface();
+            }
+        }
+        else
+        {
+            UIDisplay.GetInstance().SendWarningMessage("Не достаточно еды");
         }
     }
 
