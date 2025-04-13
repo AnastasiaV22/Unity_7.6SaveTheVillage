@@ -4,6 +4,26 @@ using UnityEngine;
 public class UIMoving : MonoBehaviour
 {
 
+    private UIMoving() { }
+    private static UIMoving instance;
+
+    public static UIMoving GetInstance()
+    {
+        return instance;
+    }
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
     [SerializeField] GameObject mainCanvas;
     [SerializeField] GameObject gameCanvas;
     [SerializeField] GameObject endGameCanvas;
@@ -13,7 +33,12 @@ public class UIMoving : MonoBehaviour
     [SerializeField] GameObject settingsPanel;
 
     [SerializeField] GameObject pausePanel;
+    
+    [SerializeField] GameObject winPanel;
+    [SerializeField] GameObject losePanel;
+    [SerializeField] GameObject buttonEndGamePanel;
 
+    
     private void Start()
     {
         MainMenuOpen();
@@ -51,8 +76,37 @@ public class UIMoving : MonoBehaviour
         pausePanel.SetActive(false);
     }
 
+    
     public void OnPauseClick()
     {
         pausePanel.SetActive(!pausePanel.activeSelf);
+        Debug.Log("ChangePause");
+
     }
+
+    public bool IsPauseButtonClick()
+    {
+        return pausePanel.activeSelf;
+    }
+
+    public void ShowWinEndGame()
+    {
+
+        endGameCanvas.SetActive(true);
+        winPanel.SetActive(true);
+        losePanel.SetActive(false);
+        buttonEndGamePanel.SetActive(true);
+        
+    }
+
+    public void ShowLoseEndGame() {
+
+        endGameCanvas.SetActive(true);
+        losePanel.SetActive(true);
+        winPanel.SetActive(false);
+        buttonEndGamePanel.SetActive(true);
+
+    }
+
+
 }

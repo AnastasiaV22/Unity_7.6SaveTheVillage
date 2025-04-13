@@ -23,6 +23,8 @@ public class UIDisplay : MonoBehaviour
     [SerializeField] Button newCitizenCreationButton;
     [SerializeField] Button newWarriorCreationButton;
 
+    [SerializeField] Text SummeryText;
+
 
     private UIDisplay() { }
     private static UIDisplay instance;
@@ -74,9 +76,9 @@ public class UIDisplay : MonoBehaviour
     }
 
     //Отображение текущего количества
-    internal void FoodUpdate(int newAmount) { foodCounter.text = newAmount.ToString();}
+    internal void FoodUpdate(int newAmount) { if (newAmount < 0) newAmount = 0; foodCounter.text = newAmount.ToString();}
     internal void CitizensUpdate(int newAmount) { citizenCounter.text = newAmount.ToString();}
-    internal void WarriorsUpdate(int newAmount) { warriorsCounter.text = newAmount.ToString();}
+    internal void WarriorsUpdate(int newAmount) { if (newAmount < 0) newAmount = 0; warriorsCounter.text = newAmount.ToString();}
     internal void RaidUpdate(int newAmount) {raidersCounter.text = newAmount.ToString();}
 
 
@@ -88,6 +90,7 @@ public class UIDisplay : MonoBehaviour
     internal void NewCitizenTimerUpdate(int time) { newCitizenTimer.fillAmount = time / 100f;}
     internal void NewWarriorTimerUpdate(int time) { newWarriorTimer.fillAmount = time / 100f;}
 
+    // обнулить кнопки при начале игры
 
     internal void ChangeCitizenCreationInterface()
     {
@@ -96,13 +99,13 @@ public class UIDisplay : MonoBehaviour
             NewCitizenTimerUpdate(100);
             citizenCreationPanel.SetActive(false);
             newCitizenCreationButton.gameObject.SetActive(true);
-            Debug.Log("Status Citizen Creation Changed (Start)");
+            Debug.Log("Status Citizen Creation Changed (End)");
         }
         else
         {
             citizenCreationPanel.SetActive(true);
             newCitizenCreationButton.gameObject.SetActive(false);
-            Debug.Log("Status Citizen Creation Changed (End)");
+            Debug.Log("Status Citizen Creation Changed (Start)");
         }
     }
 
@@ -125,6 +128,11 @@ public class UIDisplay : MonoBehaviour
     internal void SendWarningMessage(string message)
     {
         
+    }
+
+    internal void ShowGameSummery(string summery)
+    {
+        SummeryText.text = summery;
     }
 
 }

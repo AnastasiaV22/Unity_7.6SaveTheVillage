@@ -113,9 +113,6 @@ public class TimerManager
     {
         gameIsOn = false;
 
-        // удалить обьекты таймеров
-
-
     }
 
     // возвращает true если началось создание нового жителя
