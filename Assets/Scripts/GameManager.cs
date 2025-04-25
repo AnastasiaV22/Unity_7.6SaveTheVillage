@@ -31,38 +31,31 @@ public class GameManager : MonoBehaviour
     bool gameIsEnded = true;
 
     // текущее количество ресурсов и юнитов
-    [SerializeField] internal int currentAmountOfFood { get; set; }
-    [SerializeField] internal int currentAmountOfWarriors { get; set; }
-    [SerializeField] internal int currentAmountOfCitizens { get; set; }
-    [SerializeField] internal int currentAmountOfRaiders { get; set; }
+    [SerializeField] internal int currentAmountOfFood { get; private set; }
+    [SerializeField] internal int currentAmountOfWarriors { get; private set; }
+    [SerializeField] internal int currentAmountOfCitizens { get; private set; }
+    [SerializeField] internal int currentAmountOfRaiders { get; private set; }
 
     internal int currentRaid { get; private set; } = 0;
 
-    // Начальные значения ресурсов и юнитов
-    private int defaultAmountOfFood { get; } = 5;
-    private int defaultAmountOfCitizens { get; } = 2;
-    private int defaultAmountOfWarriors { get; } = 1;
-    private int defaultAmountOfRaiders { get; } = 1;
-
     // Начальная стоимость найма юнитов
-    private int defaultCitizenCost { get; } = 1;
-    private int defaultWarriorCost { get; } = 2;
+    private int defaultCitizenCost;
+    private int defaultWarriorCost;
 
     //количество нанимаемых за раз
-    private int defaultAmountNewCitizens { get; } = 1;
-    private int defaultAmountNewWarriors { get; } = 1;
-
+    private int defaultAmountNewCitizens;
+    private int defaultAmountNewWarriors;
 
     // Начальные траты и получение пшеницы 
-    private int defaultFoodForCitizen { get; } = 2;
-    private int defaultFeedingOfWarrior { get; } = 1;
+    private int defaultFoodFromCitizen;
+    private int defaultFeedingOfWarrior;
 
-    // Начальные значения таймеров
-    private int defaultFoodTimer { get; } = 10;
-    private int defaultFeedingTimer { get; } = 15;
-    private int defaultNewWarriorTimer { get; } = 5;
-    private int defaultNewCitizenTimer { get; } = 5;
-    private int defaultRaidTimer { get; } = 30;
+    // Начальные значения
+    private int defaultFoodTimer;
+    private int defaultFeedingTimer;
+    private int defaultNewWarriorTimer;
+    private int defaultNewCitizenTimer;
+    private int defaultRaidTimer;
 
     // Статистика
     private int avarageFoodAmount;
@@ -98,9 +91,9 @@ public class GameManager : MonoBehaviour
             // По окончанию таймера добавление еды
             if (_timerManager.foodTimer.timerEnded)
             {
-                avarageFoodAmount += currentAmountOfCitizens * defaultFoodForCitizen;
-                Debug.Log("food amount = " + currentAmountOfFood + "(+" + (currentAmountOfCitizens * defaultFoodForCitizen) + ")");
-                ChangeAmountOfFood(currentAmountOfCitizens * defaultFoodForCitizen);
+                avarageFoodAmount += currentAmountOfCitizens * defaultFoodFromCitizen;
+                Debug.Log("food amount = " + currentAmountOfFood + "(+" + (currentAmountOfCitizens * defaultFoodFromCitizen) + ")");
+                ChangeAmountOfFood(currentAmountOfCitizens * defaultFoodFromCitizen);
             }
 
             // По окончанию таймера кормление армии
@@ -120,6 +113,7 @@ public class GameManager : MonoBehaviour
                 ChangeAmountOfRaiders(Mathf.RoundToInt(Mathf.Sqrt(_timerManager.currentDay() * currentRaid)));
                 if (currentAmountOfWarriors >= 0)
                     avarageRaidsAmount++;
+                _UIDisplay.CurrentRaidNumberUpdate(currentRaid);
             }
 
             // По окончанию таймера создание новых жителей
@@ -163,9 +157,9 @@ public class GameManager : MonoBehaviour
             SetDefaultSettings();
 
             avarageRaidsAmount = 0;
-            avarageFoodAmount = defaultAmountOfFood;
-            avarageWarriorsAmount = defaultAmountOfWarriors;
-            avarageCitizenAmount = defaultAmountOfCitizens;
+            avarageFoodAmount = 0;
+            avarageWarriorsAmount = 0;
+            avarageCitizenAmount = 0;
         }
         _timerManager.NewGameStart(defaultFoodTimer, defaultFeedingTimer, defaultRaidTimer, defaultNewCitizenTimer, defaultNewWarriorTimer);
         EndGameController.GetInstance().OnGameStart();
@@ -173,6 +167,7 @@ public class GameManager : MonoBehaviour
         //Отображение всех счетчиков и таймеров в интерфейсе
         _UIDisplay.AllCountersUpdate(currentAmountOfFood, currentAmountOfCitizens, currentAmountOfWarriors, currentAmountOfRaiders);
         _UIDisplay.AllTimersToFullUpdate();
+        _UIDisplay.AllAchivmentsToDefault();
     }
 
     internal void EndGame(bool isLost)
@@ -212,13 +207,13 @@ public class GameManager : MonoBehaviour
             summary += $"пшеницы запасено: {currentAmountOfFood}/{Settings.GetInstance().foodAmountToWin}";
         }
             
-        if (Settings.GetInstance().winWithAmountOfUnitsOn)
+        if (Settings.GetInstance().winWithAmountOfCitizenOn)
         {
-            if (Settings.GetInstance().unitsAmountToWin <= currentAmountOfCitizens + currentAmountOfWarriors)
+            if (Settings.GetInstance().citizenAmountToWin <= currentAmountOfCitizens + currentAmountOfWarriors)
                 summary += "\n + ";
             else
                 summary += "\n - ";
-            summary += $"людей в поселении: { currentAmountOfWarriors + currentAmountOfCitizens}/{ Settings.GetInstance().unitsAmountToWin}";
+            summary += $"людей в поселении: { currentAmountOfCitizens}/{ Settings.GetInstance().citizenAmountToWin}";
         }
         
         if (Settings.GetInstance().winWithRaidSurvivedOn)
@@ -240,11 +235,34 @@ public class GameManager : MonoBehaviour
     }
     internal void SetDefaultSettings()
     {
-        currentAmountOfFood = defaultAmountOfFood;
-        currentAmountOfWarriors = defaultAmountOfWarriors;
-        currentAmountOfCitizens = defaultAmountOfCitizens;
-        currentAmountOfRaiders = defaultAmountOfRaiders;
-    }
+            // Начальные значения ресурсов и юнитов
+        currentAmountOfFood = _settings.defaultAmountOfFood;
+        currentAmountOfWarriors = _settings.defaultAmountOfWarriors;
+        currentAmountOfCitizens = _settings.defaultAmountOfCitizens;
+        currentAmountOfRaiders = _settings.defaultAmountOfRaiders;
+
+
+        // Начальная стоимость найма юнитов
+        defaultCitizenCost = _settings.defaultCitizenCost;
+        defaultWarriorCost = _settings.defaultWarriorCost;
+
+        //количество нанимаемых за раз
+        defaultAmountNewCitizens = _settings.defaultAmountNewCitizens;
+        defaultAmountNewWarriors = _settings.defaultAmountNewWarriors;
+
+
+        // Начальные траты и получение пшеницы 
+        defaultFoodFromCitizen = _settings.defaultFoodFromCitizen;
+        defaultFeedingOfWarrior = _settings.defaultFeedingOfWarrior;
+
+        // Начальные значения таймеров
+        defaultFoodTimer = _settings.defaultFoodTimer;
+        defaultFeedingTimer = _settings.defaultFeedingTimer;
+        defaultNewWarriorTimer = _settings.defaultNewWarriorTimer;
+        defaultNewCitizenTimer = _settings.defaultNewCitizenTimer;
+        defaultRaidTimer = _settings.defaultRaidTimer;
+
+}
 
     internal void ChangeAmountOfFood(int food)
     {

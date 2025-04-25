@@ -72,8 +72,9 @@ public class UIMoving : MonoBehaviour
         mainCanvas.SetActive(false);
         gameCanvas.SetActive(true);
         endGameCanvas.SetActive(false);
-
         pausePanel.SetActive(false);
+
+
     }
 
     

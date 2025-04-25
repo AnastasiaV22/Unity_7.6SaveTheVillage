@@ -23,7 +23,7 @@ public class EndGameController : MonoBehaviour
 
     // Выполняется ли условие победы
     bool winWithAmountOfFood;
-    bool winWithAmountOfUnits;
+    bool winWithAmountOfCitizen;
     bool winWithRaidSurvived;
     
     // Проиграна ли игра
@@ -50,7 +50,7 @@ public class EndGameController : MonoBehaviour
                 _GameManager.EndGame(true);
                 UIMoving.GetInstance().ShowLoseEndGame();
             }
-            else if (winWithAmountOfFood & winWithAmountOfUnits & winWithRaidSurvived)
+            else if (winWithAmountOfFood & winWithAmountOfCitizen & winWithRaidSurvived)
             {
                 OnGameEnd();
                 _GameManager.EndGame(false);
@@ -65,7 +65,7 @@ public class EndGameController : MonoBehaviour
         isLost = false;
 
         winWithAmountOfFood = !_Settings.winWithAmountOfFoodOn;
-        winWithAmountOfUnits = !_Settings.winWithAmountOfUnitsOn;
+        winWithAmountOfCitizen = !_Settings.winWithAmountOfCitizenOn;
         winWithRaidSurvived = !_Settings.winWithRaidSurvivedOn;
 
     }
@@ -81,8 +81,8 @@ public class EndGameController : MonoBehaviour
         if (_Settings.foodAmountToWin <= _GameManager.currentAmountOfFood) winWithAmountOfFood = true;
         else if (_Settings.winWithAmountOfFoodOn) winWithAmountOfFood = false;
 
-        if (_Settings.unitsAmountToWin <= _GameManager.currentAmountOfCitizens+_GameManager.currentAmountOfWarriors) winWithAmountOfUnits = true;
-        else if (_Settings.winWithAmountOfUnitsOn) winWithAmountOfUnits = false;
+        if (_Settings.citizenAmountToWin <= _GameManager.currentAmountOfCitizens) winWithAmountOfCitizen = true;
+        else if (_Settings.winWithAmountOfCitizenOn) winWithAmountOfCitizen = false;
         
         if (_Settings.raidsSurvivedToWin <= _GameManager.currentRaid) winWithRaidSurvived = true;
         else if (_Settings.winWithRaidSurvivedOn) winWithRaidSurvived = false;
