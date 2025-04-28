@@ -66,7 +66,7 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
 
-        //Создание объектов менеджератаймеров и отображениедисплея (синглтоны)
+        //Создание объектов менеджератаймеров и отображениедисплея
         _timerManager = TimerManager.GetTimers();
         _UIDisplay = UIDisplay.GetInstance();
         _settings = Settings.GetInstance();
@@ -91,6 +91,8 @@ public class GameManager : MonoBehaviour
             // По окончанию таймера добавление еды
             if (_timerManager.foodTimer.timerEnded)
             {
+                MusicManager.GetInstance().HarvestingTimeSound();
+
                 avarageFoodAmount += currentAmountOfCitizens * defaultFoodFromCitizen;
                 Debug.Log("food amount = " + currentAmountOfFood + "(+" + (currentAmountOfCitizens * defaultFoodFromCitizen) + ")");
                 ChangeAmountOfFood(currentAmountOfCitizens * defaultFoodFromCitizen);
@@ -99,6 +101,8 @@ public class GameManager : MonoBehaviour
             // По окончанию таймера кормление армии
             if (_timerManager.feedingTimer.timerEnded)
             {
+                MusicManager.GetInstance().FeedingTimeSound();
+
                 Debug.Log("After feeding food amount = " + currentAmountOfFood + "(-" + (currentAmountOfWarriors * defaultFeedingOfWarrior) + ")");
                 ChangeAmountOfFood(-currentAmountOfWarriors * defaultFeedingOfWarrior);
             }
@@ -106,11 +110,13 @@ public class GameManager : MonoBehaviour
             // По окончанию таймера рейд и характеристики нового рейда
             if (_timerManager.raidTimer.timerEnded)
             {
+                MusicManager.GetInstance().RaidTimeSound();
 
                 Debug.Log("Raid № "+ (currentRaid+1) + " After raid warriors amount = " + currentAmountOfWarriors + "(-" + currentAmountOfRaiders + ")");
                 ChangeAmountOfWarriors(-currentAmountOfRaiders);
                 currentRaid++;
-                ChangeAmountOfRaiders(Mathf.RoundToInt(Mathf.Sqrt(_timerManager.currentDay() * currentRaid)));
+                ChangeAmountOfRaiders(Mathf.RoundToInt(Mathf.Sqrt(_timerManager.currentDay() * currentRaid * (_settings.currentDifficulty+1))));
+                
                 if (currentAmountOfWarriors >= 0)
                     avarageRaidsAmount++;
                 _UIDisplay.CurrentRaidNumberUpdate(currentRaid);
@@ -119,6 +125,8 @@ public class GameManager : MonoBehaviour
             // По окончанию таймера создание новых жителей
             if (_timerManager.newCitizenTimer.timerEnded)
             {
+                MusicManager.GetInstance().NewCitizenSound();
+                
                 avarageCitizenAmount += defaultAmountNewCitizens;
                 ChangeAmountOfCitizen(defaultAmountNewCitizens);
                 UIDisplay.GetInstance().ChangeCitizenCreationInterface();
@@ -131,6 +139,8 @@ public class GameManager : MonoBehaviour
             // По окончанию таймера создание новых войнов
             if (_timerManager.newWarriorTimer.timerEnded)
             {
+                MusicManager.GetInstance().NewWarriorSound();
+
                 avarageWarriorsAmount += defaultAmountNewWarriors;
                 ChangeAmountOfWarriors(defaultAmountNewWarriors);
                 UIDisplay.GetInstance().ChangeWarriorCreationInterface();
@@ -151,6 +161,8 @@ public class GameManager : MonoBehaviour
         
         gameIsEnded = false;
         currentRaid = 0;
+        _settings.SetDefaultGameSpeed();
+
         //Начальные настройки в зависимости от сложности 
         if (difficulty == 1)
         {
@@ -227,9 +239,17 @@ public class GameManager : MonoBehaviour
         }
 
         if (isLost)
+        {
+            MusicManager.GetInstance().GameLostSounds();
             UIMoving.GetInstance().ShowLoseEndGame();
+        }
         else
+        {
+            MusicManager.GetInstance().GameWinSounds();
             UIMoving.GetInstance().ShowWinEndGame();
+
+        }
+            
         _UIDisplay.ShowGameSummery(summary);
 
     }
@@ -282,13 +302,16 @@ public class GameManager : MonoBehaviour
 
     internal void ChangeAmountOfRaiders(int raiders)
     {
-        currentAmountOfRaiders += raiders;
+        currentAmountOfRaiders = raiders;
         UIDisplay.GetInstance().RaidUpdate(currentAmountOfRaiders);
     }
 
 
     public void CreateNewCitizen()
     {
+
+        MusicManager.GetInstance().SoundOnButtonClick();
+
         if (currentAmountOfFood >= defaultCitizenCost)
         {
             if (_timerManager.CreateNewCitizen())
@@ -306,6 +329,9 @@ public class GameManager : MonoBehaviour
 
     public void CreateNewWarrior()
     {
+
+        MusicManager.GetInstance().SoundOnButtonClick();
+
         if (currentAmountOfFood >= defaultWarriorCost)
         {
             if (_timerManager.CreateNewWarrior()) { 

@@ -92,14 +92,4 @@ public class EndGameController : MonoBehaviour
     }
 
 
-    void Win()
-    {
-        
-        //зеленый
-    }
-
-    void Lose()
-    {
-        //красный
-    }
 }

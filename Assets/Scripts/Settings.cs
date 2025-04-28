@@ -22,18 +22,23 @@ public class Settings
 
     // Громкость музыки
 
-    internal int volumeMusic = 50;
+    internal float volumeMusic = 0.5f;
+
+    // Скорость игры
+
+    internal float currentGameSpeed { get; private set; } = 1;
 
     // Условия победы
 
         //активные условия победы
-    internal bool winWithAmountOfFoodOn { get; private set; } = true;
+    internal bool winWithAmountOfFoodOn { get; private set; } = false;
     internal bool winWithAmountOfCitizenOn { get; private set; } = false;
     internal bool winWithRaidSurvivedOn { get; private set; } = true;
+
         //необходимо по параметру для победы
-    internal int foodAmountToWin { get; private set; } = 50;
-    internal int citizenAmountToWin { get; private set; } = 15;
-    internal int raidsSurvivedToWin { get; private set; } = 5;
+    internal int foodAmountToWin { get; private set; } = 100;
+    internal int citizenAmountToWin { get; private set; } = 30;
+    internal int raidsSurvivedToWin { get; private set; } = 10;
 
 
     // Начальные значения ресурсов и юнитов
@@ -57,10 +62,10 @@ public class Settings
 
     // Начальные значения таймеров
     internal int defaultFoodTimer { get; private set; } = 10;
-    internal int defaultFeedingTimer { get; private set; } = 15;
-    internal int defaultNewWarriorTimer { get; private set; } = 5;
+    internal int defaultFeedingTimer { get; private set; } = 12;
+    internal int defaultNewWarriorTimer { get; private set; } = 4;
     internal int defaultNewCitizenTimer { get; private set; } = 5;
-    internal int defaultRaidTimer { get; private set; } = 30;
+    internal int defaultRaidTimer { get; private set; } = 20;
 
 
 
@@ -93,4 +98,20 @@ public class Settings
         }
     }
 
+    internal void SetMusicVolume( int newValue)
+    {
+        volumeMusic = newValue;
+    }
+
+    public void ChangeGameSpeed()
+    {
+        if (Time.timeScale == 3)
+            Time.timeScale = 1;
+        else
+            Time.timeScale += 1;
+
+        currentGameSpeed = Time.timeScale;
+
+    }
+    public void SetDefaultGameSpeed() { Time.timeScale = currentGameSpeed = 1; }
 }

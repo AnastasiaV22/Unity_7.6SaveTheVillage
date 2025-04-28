@@ -45,6 +45,9 @@ public class UIMoving : MonoBehaviour
     }
     public void MainMenuOpen()
     {
+        MusicManager.GetInstance().SoundOnButtonClick();
+        MusicManager.GetInstance().MainMenuSounds();
+
         mainCanvas.SetActive(true);
         gameCanvas.SetActive(false);
         endGameCanvas.SetActive(false);
@@ -56,18 +59,25 @@ public class UIMoving : MonoBehaviour
 
     public void OnSettingsButtonClick()
     {
+        MusicManager.GetInstance().SoundOnButtonClick();
+
         mainMenuPanel.SetActive(false);
         settingsPanel.SetActive(true);
     }
 
     public void OnAboutButtonClick()
     {
+        MusicManager.GetInstance().SoundOnButtonClick();
+
         mainMenuPanel.SetActive(false);
         aboutPanel.SetActive(true);
     }
 
     public void OnNewGameStartButtonClick()
     {
+
+        MusicManager.GetInstance().SoundOnButtonClick();
+
         Debug.Log("newgame");
         mainCanvas.SetActive(false);
         gameCanvas.SetActive(true);
@@ -80,6 +90,9 @@ public class UIMoving : MonoBehaviour
     
     public void OnPauseClick()
     {
+
+        MusicManager.GetInstance().SoundOnButtonClick();
+
         pausePanel.SetActive(!pausePanel.activeSelf);
         Debug.Log("ChangePause");
 

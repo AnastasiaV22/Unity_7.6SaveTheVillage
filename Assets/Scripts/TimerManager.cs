@@ -41,6 +41,7 @@ public class TimerManager
 
             if (feedingTimer.timerEnded && !feedingTimer.timerIsOn)
             {
+
                 Debug.Log("FeedingTimerRestart");
                 feedingTimer.StartTimer();
             }
@@ -50,11 +51,14 @@ public class TimerManager
             {
                 if (currentDay() > 3)
                 {
+
                     Debug.Log("NextRaidRestart");
+
                     NextRaid();
                 }
                 else
                 {
+                    raidTimer.SetDefaultTime(Settings.GetInstance().defaultRaidTimer*3);
                     raidTimer.StartTimer();
                 }
             }
@@ -89,6 +93,8 @@ public class TimerManager
 
     public void NewGameStart(float _defaultFoodTimer, float _defaultFeedingTimer, float _defaultRaidTimer, float _defaultNewCitizenTimer, float _defaultNewWarriorTimer)
     {
+        MusicManager.GetInstance().StartGameSounds();
+
         gameTime = 0f;
         gameIsOn = true;
 
@@ -112,6 +118,7 @@ public class TimerManager
     public void GameEnd()
     {
         gameIsOn = false;
+
 
     }
 
@@ -142,7 +149,8 @@ public class TimerManager
     {
         if (!raidTimer.timerIsOn)
         {
-            raidTimer.SetDefaultTime(raidTimer.defaultTime * Random.Range(2,5)/currentDay()); //Следующий рейд  
+            
+            raidTimer.SetDefaultTime(Settings.GetInstance().defaultRaidTimer); //Следующий рейд  
             raidTimer.StartTimer();
         }
     }
@@ -154,32 +162,21 @@ public class TimerManager
 
     public void PauseGame()
     {
+        MusicManager.GetInstance().PauseGameSounds();
+
         gameIsOn = false;
-        foodTimer.TimerOff();
-        feedingTimer.TimerOff();
-        raidTimer.TimerOff();
+        Time.timeScale = 0;
 
-
-        if (newWarriorTimer.timerIsOn)
-            newWarriorTimer.TimerOff();
-        if (newCitizenTimer.timerIsOn)
-            newCitizenTimer.TimerOff();
     }
-
 
     public void ContinueGame()
     {
+        MusicManager.GetInstance().StartGameSounds();
         gameIsOn = true;
-        foodTimer.TimerOn();
-        feedingTimer.TimerOn();
-        raidTimer.TimerOn();
-
-        // Если таймер не работал до остановки,то оставшееся время в процентах -1
-        if (newWarriorTimer.CurrentTimeProcent() != -1)
-            newWarriorTimer.TimerOn();
-        if (newCitizenTimer.CurrentTimeProcent() != -1)
-            newCitizenTimer.TimerOn();
+        
+        Time.timeScale = 1;
     }
+
 
 
 }

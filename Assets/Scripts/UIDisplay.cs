@@ -28,11 +28,16 @@ public class UIDisplay : MonoBehaviour
     [SerializeField] Text SummeryText;
 
     //Настройки 
+    [SerializeField] Slider musicVolumeSlider;
+
+
     [SerializeField] Toggle winFoodToggle;
     [SerializeField] Toggle winUnitsToggle;
     [SerializeField] Toggle winRaidsToggle;
 
     //Игра
+    [SerializeField] Button changeSpeedButton;
+
     [SerializeField] Toggle foodAchivmentToggle;
     [SerializeField] Toggle citizenAchivmentToggle;
     [SerializeField] Toggle raidsAchivmentToggle;
@@ -57,6 +62,12 @@ public class UIDisplay : MonoBehaviour
         {
             Destroy(gameObject);
         }
+    }
+
+    private void Start()
+    {
+        musicVolumeSlider.onValueChanged.AddListener(OnMusicVolumeChanged); // отслеживание изменения громкости звуков
+        changeSpeedButton.onClick.AddListener(OnSpeedChangeButton); // Отслеживание нажатия кнопки изменения скорости 
     }
 
     private void Update()
@@ -259,5 +270,17 @@ public class UIDisplay : MonoBehaviour
             fieldToUpdate.GetComponentInParent<Toggle>().isOn = false;
     }
 
+
+    private void OnMusicVolumeChanged(float volume)
+    {
+        MusicManager.GetInstance().ChangeVolume(volume);
+        
+    }
+
+    private void OnSpeedChangeButton()
+    {
+        Settings.GetInstance().ChangeGameSpeed();
+        changeSpeedButton.GetComponentInChildren<Text>().text = Settings.GetInstance().currentGameSpeed.ToString();
+    }
 
 }
